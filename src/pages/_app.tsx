@@ -1,0 +1,41 @@
+import "../styles/globals.css";
+import { loggerLink } from "@trpc/client/links/loggerLink";
+import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
+import { withTRPC } from "@trpc/next";
+import { AppType } from "next/dist/shared/lib/utils";
+import { AppRouter } from "#/server/routers/app";
+import superjson from "superjson";
+import { SessionProvider } from "next-auth/react";
+
+const MyApp: AppType = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
+  return (
+    <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
+};
+
+export default withTRPC<AppRouter>({
+  config({ ctx }) {
+    const url = process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/trpc`
+      : "http://localhost:3000/api/trpc";
+
+    return {
+      links: [
+        // loggerLink({
+        //   enabled: (opts) =>
+        //     process.env.NODE_ENV === "development" ||
+        //     (opts.direction === "down" && opts.result instanceof Error),
+        // }),
+        httpBatchLink({
+          url,
+        }),
+      ],
+      transformer: superjson,
+    };
+  },
+})(MyApp);
