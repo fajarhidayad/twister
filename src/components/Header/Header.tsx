@@ -3,7 +3,10 @@ import Link from "next/link";
 import NavLink from "./NavLink";
 import { PrimaryButton } from "../Button";
 
+import { signIn, signOut, useSession } from "next-auth/react";
+
 const Header = () => {
+  const { data: session, status } = useSession();
   return (
     <header className="bg-white shadow">
       <nav className="container flex justify-between items-center text-slate-600">
@@ -17,7 +20,18 @@ const Header = () => {
           <NavLink text="Bookmarks" href="/bookmark" />
         </ul>
 
-        <PrimaryButton>Sign In</PrimaryButton>
+        {status === "authenticated" ? (
+          <div className="flex space-x-4">
+            <h2>{session.user?.name}</h2>
+            <button className="text-red-500" onClick={() => signOut()}>
+              Logout
+            </button>
+          </div>
+        ) : (
+          <PrimaryButton onClick={() => signIn("google")}>
+            Sign In
+          </PrimaryButton>
+        )}
       </nav>
     </header>
   );
