@@ -1,13 +1,14 @@
+import { useSession } from "next-auth/react";
 import React from "react";
-import { BsCardImage, BsHeart } from "react-icons/bs";
 import CommentInput from "./CommentInput";
-import CommentList from "./CommentList";
+import Comment from "./Comment";
 import TweetBoxHeader from "./TweetBoxHeader";
 import TweetBoxReactButton from "./TweetBoxReactButton";
 
 const TweetBox = () => {
+  const { data: session } = useSession();
   return (
-    <li className="card mt-5">
+    <li className="card mb-5">
       <TweetBoxHeader />
       <p className="text-slate-700 mb-4">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia odio
@@ -16,8 +17,8 @@ const TweetBox = () => {
         alias iusto excepturi?
       </p>
       <TweetBoxReactButton />
-      <CommentInput />
-      <CommentList />
+      {session && <CommentInput />}
+      <Comment />
     </li>
   );
 };

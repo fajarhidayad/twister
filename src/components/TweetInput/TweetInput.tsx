@@ -1,7 +1,10 @@
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import React, { useState } from "react";
 import { BsImage } from "react-icons/bs";
 import { IoEarth, IoPeople } from "react-icons/io5";
 import { PrimaryButton } from "../Button";
+import ImageProfile from "../ImageProfile";
 import TweetInputPopOver from "./TweetInputPopOver";
 
 interface PublicTweetProps {
@@ -10,6 +13,8 @@ interface PublicTweetProps {
 }
 
 const TweetInput = () => {
+  const { data: session } = useSession();
+
   const [popOver, setPopOver] = useState(false);
   const [publicTweet, setPublicTweet] = useState<PublicTweetProps>({
     public: true,
@@ -17,11 +22,11 @@ const TweetInput = () => {
   });
 
   return (
-    <section className="card">
+    <section className="card mb-5">
       <h2 className="font-bold text-slate-800">Tweet goes here!</h2>
       <div className="border-b border-b-slate-200 my-3" />
       <div className="flex space-x-4">
-        <div className="rounded-full w-10 h-10 bg-slate-300" />
+        <ImageProfile src={session?.user?.image as string} />
         <div className="flex-1 flex flex-col">
           <textarea
             placeholder="Write something here..."

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { BsHeart } from "react-icons/bs";
 
@@ -9,7 +10,11 @@ const CommentBox = () => {
       <div>
         <div className="flex-1 bg-slate-100 rounded-lg py-2 px-3">
           <div className="flex items-baseline space-x-3 mb-1">
-            <h1 className="font-bold text-slate-800">Keanu Reeves</h1>
+            <Link href="/">
+              <a className="font-bold text-slate-800 hover:underline">
+                Keanu Reeves
+              </a>
+            </Link>
             <p className="text-xs text-slate-400">17 August at 17:00</p>
           </div>
           <p className="text-slate-700 mb-1">
@@ -30,7 +35,7 @@ const CommentBox = () => {
   );
 };
 
-const CommentList = () => {
+const Comment = () => {
   return (
     <ul className="border-t border-t-slate-300 py-3">
       <CommentBox />
@@ -38,4 +43,4 @@ const CommentList = () => {
   );
 };
 
-export default CommentList;
+export default Comment;

@@ -4,12 +4,13 @@ import Head from "next/head";
 
 const ExplorePage: NextPage = () => {
   return (
-    <div>
+    <main className="layout">
       <Head>
         <title>Explore | Twister App</title>
       </Head>
-      ExplorePage
-    </div>
+      
+      <h1 className="text-center font-bold text-2xl">Not implemented yet</h1>
+    </main>
   );
 };
 

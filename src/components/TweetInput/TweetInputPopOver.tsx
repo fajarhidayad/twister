@@ -14,7 +14,7 @@ const TweetInputPopOver: React.FC<TweetInputPopOverProps> = ({
   setPrivate,
 }) => {
   return (
-    <PopOver isActive={active}>
+    <PopOver isActive={active} className="top-14 left-4">
       <div className="text-xs text-slate-800 w-[190px]">
         <h3 className="font-bold mb-1">Who can reply</h3>
         <p className="text-slate-600">Choose who can reply to this tweet</p>

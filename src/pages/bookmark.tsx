@@ -3,12 +3,13 @@ import Head from "next/head";
 
 const BookmarkPage: NextPage = () => {
   return (
-    <div>
+    <main className="layout">
       <Head>
         <title>Bookmark | Twister App</title>
       </Head>
-      BookmarkPage
-    </div>
+
+      <h1 className="text-center font-bold text-2xl">Not implemented yet</h1>
+    </main>
   );
 };
 

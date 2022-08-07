@@ -8,6 +8,8 @@ import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "react-query/devtools";
 import Header from "#/components/Header";
+import ModalLogin from "#/components/Header/ModalLogin";
+import LoadingPage from "#/layouts/LoadingPage";
 
 const MyApp: AppType = ({
   Component,
@@ -15,8 +17,11 @@ const MyApp: AppType = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Header />
-      <Component {...pageProps} />
+      <LoadingPage>
+        <ModalLogin />
+        <Header />
+        <Component {...pageProps} />
+      </LoadingPage>
       <ReactQueryDevtools />
     </SessionProvider>
   );
