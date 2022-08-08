@@ -34,7 +34,9 @@ const Header = () => {
               className="flex items-center space-x-4"
             >
               <ImageProfile src={session.user?.image as string} />
-              <h2 className="font-bold text-slate-700">{session.user?.name}</h2>
+              <h2 className="hidden md:block font-bold text-slate-700">
+                {session.user?.name}
+              </h2>
               <FaSortDown />
             </button>
             <ProfilePopOver

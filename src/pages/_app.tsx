@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import Header from "#/components/Header";
 import ModalLogin from "#/components/Header/ModalLogin";
 import LoadingPage from "#/layouts/LoadingPage";
+import BottomNav from "#/layouts/BottomNav";
 
 const MyApp: AppType = ({
   Component,
@@ -21,6 +22,7 @@ const MyApp: AppType = ({
         <ModalLogin />
         <Header />
         <Component {...pageProps} />
+        <BottomNav />
       </LoadingPage>
       <ReactQueryDevtools />
     </SessionProvider>

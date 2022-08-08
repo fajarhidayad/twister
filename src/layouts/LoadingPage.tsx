@@ -18,7 +18,7 @@ const LoadingPage: React.FC<LoadingPageProps> = ({ children }) => {
       </div>
     );
 
-  return <>{children}</>;
+  return <div className="relative">{children}</div>;
 };
 
 export default LoadingPage;

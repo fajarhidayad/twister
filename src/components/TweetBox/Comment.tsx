@@ -5,7 +5,7 @@ import { BsHeart } from "react-icons/bs";
 const CommentBox = () => {
   return (
     <li className="flex space-x-3">
-      <div className="rounded-full w-10 h-10 bg-slate-300" />
+      <div className="flex-shrink-0 rounded-full w-10 h-10 bg-slate-300" />
 
       <div>
         <div className="flex-1 bg-slate-100 rounded-lg py-2 px-3">
