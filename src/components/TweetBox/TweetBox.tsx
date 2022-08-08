@@ -5,17 +5,27 @@ import Comment from "./Comment";
 import TweetBoxHeader from "./TweetBoxHeader";
 import TweetBoxReactButton from "./TweetBoxReactButton";
 
-const TweetBox = () => {
+interface User {
+  name: string | null;
+  image: string | null;
+}
+
+interface TweetBoxProps {
+  text: string;
+  createdAt: Date;
+  user: User;
+}
+
+const TweetBox = ({ text, createdAt, user }: TweetBoxProps) => {
   const { data: session } = useSession();
   return (
     <li className="card mb-5">
-      <TweetBoxHeader />
-      <p className="text-slate-700 mb-4">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officia odio
-        deserunt veritatis nesciunt pariatur voluptatem eveniet atque facilis.
-        Perferendis totam ducimus fugit. Itaque modi dolorem tenetur. Temporibus
-        alias iusto excepturi?
-      </p>
+      <TweetBoxHeader
+        createdAt={createdAt}
+        name={user.name as string}
+        image={user.image as string}
+      />
+      <p className="text-slate-700 mb-4">{text}</p>
       <TweetBoxReactButton />
       {session && <CommentInput />}
       <Comment />

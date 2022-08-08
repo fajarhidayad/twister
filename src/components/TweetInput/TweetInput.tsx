@@ -1,5 +1,5 @@
+import { trpc } from "#/utils/trpc";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import React, { useState } from "react";
 import { BsImage } from "react-icons/bs";
 import { IoEarth, IoPeople } from "react-icons/io5";
@@ -14,12 +14,27 @@ interface PublicTweetProps {
 
 const TweetInput = () => {
   const { data: session } = useSession();
+  const utils = trpc.useContext();
+  const tweetMutation = trpc.useMutation(["tweet.addTweet"], {
+    onSuccess() {
+      utils.invalidateQueries(["tweet.getAllTweet"]);
+    },
+    onMutate() {},
+  });
 
+  const [text, setText] = useState("");
   const [popOver, setPopOver] = useState(false);
   const [publicTweet, setPublicTweet] = useState<PublicTweetProps>({
     public: true,
     title: "Everyone",
   });
+
+  const submitTweet = async () => {
+    if (!text) return;
+    tweetMutation.mutate({
+      text,
+    });
+  };
 
   return (
     <section className="card mb-5">
@@ -29,6 +44,8 @@ const TweetInput = () => {
         <ImageProfile src={session?.user?.image as string} />
         <div className="flex-1 flex flex-col">
           <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
             placeholder="Write something here..."
             className="focus:outline-none py-2"
             maxLength={255}
@@ -59,7 +76,9 @@ const TweetInput = () => {
                 }}
               />
             </div>
-            <PrimaryButton>Tweet</PrimaryButton>
+            <PrimaryButton disabled={text.length < 1} onClick={submitTweet}>
+              Tweet
+            </PrimaryButton>
           </div>
         </div>
       </div>

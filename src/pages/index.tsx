@@ -1,11 +1,18 @@
+import { Loading } from "#/components/Loader/Loading";
 import TweetBox from "#/components/TweetBox";
 import TweetInput from "#/components/TweetInput";
+import { trpc } from "#/utils/trpc";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
+  const {
+    data: tweets,
+    isLoading,
+    error,
+  } = trpc.useQuery(["tweet.getAllTweet"]);
 
   return (
     <main className="layout">
@@ -16,10 +23,19 @@ const Home: NextPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-3">
         <section className="md:col-span-2">
           {session && <TweetInput />}
+          {isLoading && <Loading />}
+          {error && <h1 className="text-red-500">{error.message}</h1>}
 
           <ul className="mb-4">
-            <TweetBox />
-            <TweetBox />
+            {tweets &&
+              tweets.map((tweet) => (
+                <TweetBox
+                  key={tweet.id}
+                  createdAt={tweet.createdAt}
+                  text={tweet.text}
+                  user={{ image: tweet.user.image, name: tweet.user.name }}
+                />
+              ))}
           </ul>
         </section>
         <aside className="hidden md:block col-span-1">

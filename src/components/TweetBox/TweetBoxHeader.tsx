@@ -1,17 +1,27 @@
 import React from "react";
 import Link from "next/link";
+import ImageProfile from "../ImageProfile";
+import { format } from "date-fns";
 
-const TweetBoxHeader = () => {
+interface TweetBoxHeaderProps {
+  name: string;
+  createdAt: Date;
+  image: string;
+}
+
+const TweetBoxHeader = ({ name, createdAt, image }: TweetBoxHeaderProps) => {
+  const date = format(createdAt, "dd LLLL 'at' HH':'mm");
+
   return (
     <div className="flex space-x-3 mb-4">
-      <div className="rounded-full w-10 h-10 bg-slate-300" />
+      <ImageProfile src={image} />
       <div className="flex flex-col justify-between">
         <Link href={"/"}>
           <h1 className="font-bold text-slate-800 hover:underline cursor-pointer">
-            Keanu Reeves
+            {name}
           </h1>
         </Link>
-        <p className="text-xs text-slate-400">17 August at 17:00</p>
+        <p className="text-xs text-slate-400">{date}</p>
       </div>
     </div>
   );
