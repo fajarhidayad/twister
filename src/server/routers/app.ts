@@ -1,12 +1,9 @@
 import { createRouter } from "../createRouter";
 import superjson from "superjson";
+import { tweets } from "./tweet";
 
 export const appRouter = createRouter()
   .transformer(superjson)
-  .query("home", {
-    resolve() {
-      return "Welcome!";
-    },
-  });
+  .merge("tweet.", tweets);
 
 export type AppRouter = typeof appRouter;
