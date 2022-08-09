@@ -1,40 +1,33 @@
-import { GetServerSideProps, NextPage } from "next";
-import { unstable_getServerSession } from "next-auth";
+import { Loading } from "#/components/Loader/Loading";
+import { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { authOptions } from "./api/auth/[...nextauth]";
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      session,
-    },
-  };
-};
+import { useRouter } from "next/router";
 
 const BookmarkPage: NextPage = () => {
-  return (
-    <main className="layout">
-      <Head>
-        <title>Bookmark | Twister App</title>
-      </Head>
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-      <h1 className="text-center font-bold text-2xl">Not implemented yet</h1>
-    </main>
+  if (status === "unauthenticated") {
+    router.push("/");
+  }
+
+  if (status === "authenticated") {
+    return (
+      <main className="layout">
+        <Head>
+          <title>Bookmark | Twister App</title>
+        </Head>
+
+        <h1 className="text-center font-bold text-2xl">Not implemented yet</h1>
+      </main>
+    );
+  }
+
+  return (
+    <>
+      <Loading />
+    </>
   );
 };
 

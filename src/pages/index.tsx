@@ -1,18 +1,28 @@
 import { Loading } from "#/components/Loader/Loading";
 import TweetBox from "#/components/TweetBox";
 import TweetInput from "#/components/TweetInput";
+import { useTweetStore } from "#/store";
 import { trpc } from "#/utils/trpc";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
   const {
-    data: tweets,
+    data: newTweets,
     isLoading,
     error,
   } = trpc.useQuery(["tweet.getAllTweet"]);
+
+  const { tweets, fetchTweets } = useTweetStore();
+
+  useEffect(() => {
+    if (newTweets) {
+      fetchTweets(newTweets);
+    }
+  }, [fetchTweets, newTweets]);
 
   return (
     <main className="layout">
@@ -31,6 +41,7 @@ const Home: NextPage = () => {
               tweets.map((tweet) => (
                 <TweetBox
                   key={tweet.id}
+                  id={tweet.id}
                   createdAt={tweet.createdAt}
                   text={tweet.text}
                   user={{ image: tweet.user.image, name: tweet.user.name }}

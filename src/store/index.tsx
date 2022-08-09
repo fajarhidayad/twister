@@ -1,4 +1,5 @@
 import create from "zustand";
+import { inferQueryOutput } from "#/utils/trpc";
 
 interface User {
   name: string;
@@ -29,4 +30,24 @@ export const useModalStore = create<ModalState>()((set) => ({
   toggle: () => set((state) => ({ active: !state.active })),
   open: () => set(() => ({ active: true })),
   close: () => set(() => ({ active: false })),
+}));
+
+export interface LikeTweet {
+  userId: string;
+  tweetId: string;
+}
+
+type Tweets = inferQueryOutput<"tweet.getAllTweet">;
+type Tweet = inferQueryOutput<"tweet.getTweetById">;
+
+interface TweetState {
+  tweets: Tweets;
+  fetchTweets: (tweets: Tweets) => void;
+  tweetById: (id: string) => Tweet | undefined;
+}
+
+export const useTweetStore = create<TweetState>()((set, get) => ({
+  tweets: [],
+  fetchTweets: (tweets) => set(() => ({ tweets })),
+  tweetById: (id) => get().tweets.find((item) => item.id === id),
 }));

@@ -17,14 +17,47 @@ const getSessionOrThrow = (ctx: Context) => {
 export const tweets = createRouter()
   .query("getAllTweet", {
     async resolve({ ctx }) {
+      const { session } = ctx;
+      const userId = session && session.user ? session.user.id : "";
+
       const tweets = await ctx.prisma.tweet.findMany({
         orderBy: { createdAt: "desc" },
         include: {
           user: true,
+          comments: true,
+          likes: {
+            where: {
+              userId,
+            },
+          },
+          _count: true,
         },
       });
 
       return tweets;
+    },
+  })
+  .query("getTweetById", {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      const { session } = ctx;
+      const userId = session && session.user ? session.user.id : "";
+
+      const tweet = await ctx.prisma.tweet.findUniqueOrThrow({
+        where: { id: input },
+        include: {
+          _count: true,
+          user: true,
+          comments: true,
+          likes: {
+            where: {
+              userId,
+            },
+          },
+        },
+      });
+
+      return tweet;
     },
   })
   .mutation("addTweet", {
@@ -49,5 +82,32 @@ export const tweets = createRouter()
       });
 
       return newTweet;
+    },
+  })
+  .mutation("likeTweet", {
+    input: z.string(),
+    async resolve({ ctx, input }) {
+      const { prisma } = ctx;
+      const email = getSessionOrThrow(ctx).email as string;
+
+      const user = await prisma.user.findUniqueOrThrow({ where: { email } });
+      const likeTweet = await prisma.likeTweet.findFirst({
+        where: { userId: user.id, tweetId: input },
+      });
+
+      if (likeTweet) {
+        return await prisma.likeTweet.delete({
+          where: {
+            userId_tweetId: {
+              tweetId: input,
+              userId: user.id,
+            },
+          },
+        });
+      }
+
+      return await prisma.likeTweet.create({
+        data: { userId: user.id, tweetId: input },
+      });
     },
   });

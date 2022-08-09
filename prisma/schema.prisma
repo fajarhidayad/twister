@@ -43,6 +43,7 @@ model User {
   email         String?       @unique
   emailVerified DateTime?
   image         String?
+  username      String?       @unique
   accounts      Account[]
   sessions      Session[]
   tweets        Tweet[]
@@ -76,13 +77,12 @@ model Tweet {
 }
 
 model LikeTweet {
-  id     String  @id @default(cuid())
-  status Boolean
-
   user    User   @relation(fields: [userId], references: [id])
   userId  String
   tweet   Tweet  @relation(fields: [tweetId], references: [id])
   tweetId String
+
+  @@id([userId, tweetId])
 }
 
 model LikeComment {

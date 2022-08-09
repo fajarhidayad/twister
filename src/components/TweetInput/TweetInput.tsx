@@ -1,3 +1,4 @@
+import { useTweetStore } from "#/store";
 import { trpc } from "#/utils/trpc";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
@@ -19,7 +20,6 @@ const TweetInput = () => {
     onSuccess() {
       utils.invalidateQueries(["tweet.getAllTweet"]);
     },
-    onMutate() {},
   });
 
   const [text, setText] = useState("");
@@ -34,6 +34,7 @@ const TweetInput = () => {
     tweetMutation.mutate({
       text,
     });
+    setText("");
   };
 
   return (

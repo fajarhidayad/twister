@@ -11,12 +11,13 @@ interface User {
 }
 
 interface TweetBoxProps {
+  id: string;
   text: string;
   createdAt: Date;
   user: User;
 }
 
-const TweetBox = ({ text, createdAt, user }: TweetBoxProps) => {
+const TweetBox = ({ text, createdAt, user, id }: TweetBoxProps) => {
   const { data: session } = useSession();
   return (
     <li className="card mb-5">
@@ -26,9 +27,9 @@ const TweetBox = ({ text, createdAt, user }: TweetBoxProps) => {
         image={user.image as string}
       />
       <p className="text-slate-700 mb-4">{text}</p>
-      <TweetBoxReactButton />
+      <TweetBoxReactButton tweetId={id} />
       {session && <CommentInput />}
-      <Comment />
+      {/* <Comment /> */}
     </li>
   );
 };
