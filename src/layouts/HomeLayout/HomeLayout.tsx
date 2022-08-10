@@ -27,7 +27,7 @@ const HomeLayout = () => {
   }, [saveTweets, newTweets]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-3">
+    <div className="container grid grid-cols-1 md:grid-cols-3 gap-8 px-3">
       <section className="md:col-span-2">
         {session && <TweetInput />}
         <TweetList

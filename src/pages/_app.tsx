@@ -17,7 +17,7 @@ const MyApp: AppType = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session} basePath="/src">
+    <SessionProvider session={session}>
       <LoadingPage>
         <ModalLogin />
         <section>

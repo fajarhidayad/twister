@@ -9,8 +9,8 @@ interface ProfileHeaderProps {
 
 const ProfileHeader = ({ followers, following, name }: ProfileHeaderProps) => {
   return (
-    <>
-      <section className="card flex flex-col items-center md:flex-row md:items-start mx-3">
+    <div className="container px-3">
+      <section className="card flex flex-col items-center md:flex-row md:items-start ">
         <div className="w-32 h-32 overflow-hidden rounded-full bg-gray-300 md:mr-10"></div>
         <div className="flex-1 py-3 flex flex-col items-center md:flex-row md:items-start">
           <div className="md:w-3/5 md:mr-auto">
@@ -41,7 +41,7 @@ const ProfileHeader = ({ followers, following, name }: ProfileHeaderProps) => {
           <PrimaryButton>Follow</PrimaryButton>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

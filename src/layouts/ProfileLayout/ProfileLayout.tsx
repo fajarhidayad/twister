@@ -33,7 +33,7 @@ const ProfileLayout = ({ username }: ProfileLayoutProps) => {
         following={following}
         name={userProfile ? (userProfile.name as string) : ""}
       />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-3 mt-5">
+      <div className="container grid grid-cols-1 md:grid-cols-3 gap-8 px-3 mt-5">
         <aside className="hidden md:block col-span-1">
           <section className="sticky top-10">
             <div className="card mb-5">
