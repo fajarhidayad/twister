@@ -62,8 +62,8 @@ export const tweets = createRouter()
   })
   .query("getTweetByUserAuth", {
     async resolve({ ctx }) {
-      const { prisma } = ctx;
-      const userId = getSessionOrThrow(ctx).id;
+      const { prisma, session } = ctx;
+      const userId = session && session.user ? session.user.id : "";
 
       const tweets = await prisma.tweet.findMany({
         where: {

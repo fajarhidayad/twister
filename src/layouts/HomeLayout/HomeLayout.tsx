@@ -8,11 +8,15 @@ import TweetList from "./TweetList";
 
 const HomeLayout = () => {
   const { data: session } = useSession();
-  const {
-    data: newTweets,
-    isLoading,
-    error,
-  } = trpc.useQuery(["tweet.getTweetByUserAuth"]);
+
+  const getSessionTweet = () => {
+    if (session) {
+      return trpc.useQuery(["tweet.getTweetByUserAuth"]);
+    }
+    return trpc.useQuery(["tweet.getAllTweet"]);
+  };
+
+  const { data: newTweets, isLoading, error } = getSessionTweet();
 
   const { tweets, saveTweets } = useTweetStore();
 
