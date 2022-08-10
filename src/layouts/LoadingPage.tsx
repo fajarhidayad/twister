@@ -18,7 +18,11 @@ const LoadingPage: React.FC<LoadingPageProps> = ({ children }) => {
       </div>
     );
 
-  return <div className="relative">{children}</div>;
+  return (
+    <div className="relative h-screen flex flex-col justify-between">
+      {children}
+    </div>
+  );
 };
 
 export default LoadingPage;

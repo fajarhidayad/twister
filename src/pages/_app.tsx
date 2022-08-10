@@ -20,8 +20,10 @@ const MyApp: AppType = ({
     <SessionProvider session={session}>
       <LoadingPage>
         <ModalLogin />
-        <Header />
-        <Component {...pageProps} />
+        <section>
+          <Header />
+          <Component {...pageProps} />
+        </section>
         <BottomNav />
       </LoadingPage>
       <ReactQueryDevtools />

@@ -60,6 +60,40 @@ export const tweets = createRouter()
       return tweet;
     },
   })
+  .query("getTweetByUserAuth", {
+    async resolve({ ctx }) {
+      const { prisma } = ctx;
+      const userId = getSessionOrThrow(ctx).id;
+
+      const tweets = await prisma.tweet.findMany({
+        where: {
+          userId,
+          OR: {
+            user: {
+              following: {
+                every: {
+                  followerId: userId,
+                },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: true,
+          comments: true,
+          likes: {
+            where: {
+              userId,
+            },
+          },
+          _count: true,
+        },
+      });
+
+      return tweets;
+    },
+  })
   .mutation("addTweet", {
     input: z.object({
       text: z.string().max(255),

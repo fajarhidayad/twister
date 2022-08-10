@@ -1,5 +1,5 @@
-import { useModalStore, useTweetStore } from "#/store";
-import { trpc } from "#/utils/trpc";
+import { useLikeMutation } from "#/api/useLikeMutation";
+import { useModalStore } from "#/store";
 import { useSession } from "next-auth/react";
 import React from "react";
 import {
@@ -17,27 +17,29 @@ enum ButtonType {
 
 interface TweetBoxReactButtonProps {
   tweetId: string;
+  likesCount: number;
+  commentCount: number;
+  bookmarkCount: number;
+  isLikedByUser: boolean;
 }
 
-const TweetBoxReactButton = ({ tweetId }: TweetBoxReactButtonProps) => {
+const TweetBoxReactButton = ({
+  tweetId,
+  bookmarkCount,
+  commentCount,
+  isLikedByUser,
+  likesCount,
+}: TweetBoxReactButtonProps) => {
   const { data: session } = useSession();
   const { open: openModal } = useModalStore();
-
-  const utils = trpc.useContext();
-  const tweet = useTweetStore((state) => state.tweetById(tweetId));
-
-  const likeMutation = trpc.useMutation(["tweet.likeTweet"], {
-    onSettled: () => {
-      utils.invalidateQueries(["tweet.getAllTweet"]);
-    },
-  });
+  // const tweet = useTweetStore((state) => state.tweetById(tweetId));
+  const likeMutation = useLikeMutation(session!, tweetId);
 
   const checkIsNotAuth = async (type: ButtonType) => {
     if (!session) {
       openModal();
       return;
     }
-
     switch (type) {
       case ButtonType.LIKE:
         likeMutation.mutate(tweetId);
@@ -55,15 +57,15 @@ const TweetBoxReactButton = ({ tweetId }: TweetBoxReactButtonProps) => {
       <button
         onClick={() => checkIsNotAuth(ButtonType.LIKE)}
         className={`flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 hover:text-red-400 ${
-          tweet && tweet.likes.length === 1 && "text-red-500"
+          isLikedByUser && "text-red-500"
         }`}
       >
         <BsHeart />
-        <span className="text-xs">{tweet ? tweet._count.likes : 0}</span>
+        <span className="text-xs">{likesCount}</span>
       </button>
       <button className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 hover:text-blue-400">
         <BsChatRight />
-        <span className="text-xs">0</span>
+        <span className="text-xs">{commentCount}</span>
       </button>
       <button
         onClick={() => checkIsNotAuth(ButtonType.RETWEET)}
@@ -77,7 +79,7 @@ const TweetBoxReactButton = ({ tweetId }: TweetBoxReactButtonProps) => {
         className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-gray-100 hover:text-orange-400"
       >
         <BsBookmark />
-        <span className="text-xs">0</span>
+        <span className="text-xs">{bookmarkCount}</span>
       </button>
     </div>
   );

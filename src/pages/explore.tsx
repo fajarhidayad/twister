@@ -1,6 +1,7 @@
 import React from "react";
 import { NextPage } from "next";
 import Head from "next/head";
+import ExploreLayout from "#/layouts/ExploreLayout";
 
 const ExplorePage: NextPage = () => {
   return (
@@ -8,8 +9,8 @@ const ExplorePage: NextPage = () => {
       <Head>
         <title>Explore | Twister App</title>
       </Head>
-      
-      <h1 className="text-center font-bold text-2xl">Not implemented yet</h1>
+
+      <ExploreLayout />
     </main>
   );
 };
