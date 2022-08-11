@@ -10,13 +10,6 @@ export const user = createRouter()
       const { session } = ctx;
       const userId = session && session.user ? session.user.id : "";
 
-      if (userId === input) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Can't follow yourself",
-        });
-      }
-
       const user = await ctx.prisma.user.findUniqueOrThrow({
         where: { id: input },
         include: {
@@ -67,6 +60,13 @@ export const user = createRouter()
     async resolve({ ctx, input }) {
       const userId = getSessionOrThrow(ctx).id;
       const followerId_followingId = { followerId: userId, followingId: input };
+
+      if (userId === input) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Can't follow yourself",
+        });
+      }
 
       const isFollow = await ctx.prisma.follows.findUnique({
         where: {

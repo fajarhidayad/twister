@@ -19,6 +19,7 @@ const TweetInput = () => {
   const tweetMutation = trpc.useMutation(["tweet.addTweet"], {
     onSuccess() {
       utils.invalidateQueries(["tweet.getAllTweet"]);
+      utils.invalidateQueries(["tweet.getTweetByUserAuth"]);
     },
   });
 

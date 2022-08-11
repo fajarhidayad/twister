@@ -39,7 +39,6 @@ const ProfileHeader = ({
   const onClickFollow = () => {
     if (!session) openModal();
 
-    console.log("success");
     mutateFollow(id);
   };
 
