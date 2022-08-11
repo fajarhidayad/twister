@@ -1,18 +1,6 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { Context } from "../context";
 import { createRouter } from "../createRouter";
-
-const getSessionOrThrow = (ctx: Context) => {
-  if (!ctx.session || !ctx.session.user) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "You have to logged in to create tweet",
-    });
-  }
-
-  return ctx.session.user;
-};
+import { getSessionOrThrow } from "../middleware";
 
 export const tweets = createRouter()
   .query("getAllTweet", {
@@ -67,16 +55,20 @@ export const tweets = createRouter()
 
       const tweets = await prisma.tweet.findMany({
         where: {
-          userId,
-          OR: {
-            user: {
-              following: {
-                every: {
-                  followerId: userId,
+          OR: [
+            {
+              userId,
+            },
+            {
+              user: {
+                following: {
+                  every: {
+                    followerId: userId,
+                  },
                 },
               },
             },
-          },
+          ],
         },
         orderBy: { createdAt: "desc" },
         include: {
@@ -92,6 +84,36 @@ export const tweets = createRouter()
       });
 
       return tweets;
+    },
+  })
+  .query("getTweetBookmark", {
+    async resolve({ ctx }) {
+      const userId = getSessionOrThrow(ctx).id;
+      const savedTweets = await ctx.prisma.bookmark.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+        include: {
+          tweet: {
+            include: {
+              _count: {
+                select: {
+                  bookmarks: true,
+                  comments: true,
+                  likes: true,
+                },
+              },
+              likes: {
+                where: {
+                  userId,
+                },
+              },
+            },
+          },
+          user: true,
+        },
+      });
+
+      return savedTweets;
     },
   })
   .mutation("addTweet", {

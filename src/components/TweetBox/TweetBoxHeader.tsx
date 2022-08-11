@@ -7,14 +7,14 @@ interface TweetBoxHeaderProps {
   name: string;
   createdAt: Date;
   image: string;
-  username: string;
+  id: string;
 }
 
 const TweetBoxHeader = ({
   name,
   createdAt,
   image,
-  username,
+  id,
 }: TweetBoxHeaderProps) => {
   const date = format(createdAt, "dd LLLL 'at' HH':'mm");
 
@@ -22,7 +22,7 @@ const TweetBoxHeader = ({
     <div className="flex space-x-3 mb-4">
       <ImageProfile src={image} />
       <div className="flex flex-col justify-between">
-        <Link href={`/${username}`}>
+        <Link href={`/${id}`}>
           <h1 className="font-bold text-slate-800 hover:underline cursor-pointer">
             {name}
           </h1>

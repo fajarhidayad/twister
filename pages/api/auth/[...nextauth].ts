@@ -24,6 +24,10 @@ export default NextAuth({
     session: async ({ session, token }) => {
       if (session.user) {
         session.user.id = token.uid;
+        const user = await prisma.user.findUniqueOrThrow({
+          where: { id: token.uid },
+        });
+        session.user.username = user.username as string;
       }
       return session;
     },

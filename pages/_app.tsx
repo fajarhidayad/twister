@@ -46,6 +46,7 @@ export default withTRPC<AppRouter>({
         // }),
         httpBatchLink({
           url,
+          maxBatchSize: 10,
         }),
       ],
       transformer: superjson,

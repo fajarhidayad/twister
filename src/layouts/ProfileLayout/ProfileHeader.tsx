@@ -1,17 +1,58 @@
 import { PrimaryButton } from "#/components/Button";
+import { useModalStore } from "#/store";
+import { trpc } from "#/utils/trpc";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import React from "react";
+import { CgSpinner } from "react-icons/cg";
 
 interface ProfileHeaderProps {
+  id: string;
   name: string;
   followers: number;
   following: number;
+  image: string | null;
+  isFollowed: boolean;
 }
 
-const ProfileHeader = ({ followers, following, name }: ProfileHeaderProps) => {
+const ProfileHeader = ({
+  id,
+  followers,
+  following,
+  isFollowed,
+  name,
+  image,
+}: ProfileHeaderProps) => {
+  const { data: session } = useSession();
+  const { open: openModal } = useModalStore();
+
+  const utils = trpc.useContext();
+  const { mutate: mutateFollow, isLoading } = trpc.useMutation(
+    ["user.follow"],
+    {
+      onSuccess: ({ followingId }) => {
+        utils.invalidateQueries(["user.getUserProfile", followingId]);
+      },
+    }
+  );
+
+  const onClickFollow = () => {
+    if (!session) openModal();
+
+    console.log("success");
+    mutateFollow(id);
+  };
+
   return (
     <div className="container px-3">
       <section className="card flex flex-col items-center md:flex-row md:items-start ">
-        <div className="w-32 h-32 overflow-hidden rounded-full bg-gray-300 md:mr-10"></div>
+        <div className="w-32 h-32 overflow-hidden rounded-full bg-gray-300 md:mr-10">
+          {image ? (
+            <Image src={image} width={200} height={200} alt="image profile" />
+          ) : (
+            ""
+          )}
+        </div>
         <div className="flex-1 py-3 flex flex-col items-center md:flex-row md:items-start">
           <div className="md:w-3/5 md:mr-auto">
             <div className="flex flex-col items-center md:flex-row md:items-baseline mb-5">
@@ -32,13 +73,22 @@ const ProfileHeader = ({ followers, following, name }: ProfileHeaderProps) => {
               </div>
             </div>
             <p className="text-slate-600 text-center md:text-left mb-5 md:mb-0">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore
-              laborum nesciunt libero ipsum qui vitae sequi expedita! Eveniet
-              nesciunt, amet quas animi provident omnis? Fugit error deserunt
-              sapiente quae qui.
+              No description
             </p>
           </div>
-          <PrimaryButton>Follow</PrimaryButton>
+          {session?.user?.id !== id && (
+            <PrimaryButton onClick={onClickFollow} outlined={isFollowed}>
+              {isLoading ? (
+                <div className="animate-spin text-blue-500">
+                  <CgSpinner />
+                </div>
+              ) : isFollowed ? (
+                "Unfollow"
+              ) : (
+                "Follow"
+              )}
+            </PrimaryButton>
+          )}
         </div>
       </section>
     </div>

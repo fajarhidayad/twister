@@ -4,13 +4,14 @@ import NavLink from "./NavLink";
 import { PrimaryButton } from "../Button";
 import { FaSortDown } from "react-icons/fa";
 
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useModalStore } from "#/store";
 import ImageProfile from "../ImageProfile";
 import ProfilePopOver from "./ProfilePopOver";
 
 const Header = () => {
   const [menuProfile, setMenuProfile] = useState(false);
+
   const { data: session, status } = useSession();
   const { open: openModal } = useModalStore();
 
@@ -41,7 +42,7 @@ const Header = () => {
             </button>
             <ProfilePopOver
               active={menuProfile}
-              activeFn={() => setMenuProfile(false)}
+              closeMenu={() => setMenuProfile(false)}
             />
           </div>
         ) : (

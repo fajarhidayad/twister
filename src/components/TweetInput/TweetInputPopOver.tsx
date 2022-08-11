@@ -1,20 +1,26 @@
-import React from "react";
+import React, { useRef } from "react";
 import { PopOver } from "../Overlay";
 import { IoEarth, IoPeople } from "react-icons/io5";
+import useClickOutside from "#/hooks/useClickOutside";
 
 interface TweetInputPopOverProps {
   active: boolean;
   setPublic: () => void;
   setPrivate: () => void;
+  close: () => void;
 }
 
 const TweetInputPopOver: React.FC<TweetInputPopOverProps> = ({
   active,
   setPublic,
   setPrivate,
+  close,
 }) => {
+  const menuRef = useRef(null);
+  useClickOutside(menuRef, close);
+
   return (
-    <PopOver isActive={active} className="top-14 left-4">
+    <PopOver menuRef={menuRef} isActive={active} className="top-14 left-4">
       <div className="text-xs text-slate-800 w-[190px]">
         <h3 className="font-bold mb-1">Who can reply</h3>
         <p className="text-slate-600">Choose who can reply to this tweet</p>

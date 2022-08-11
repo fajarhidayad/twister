@@ -75,6 +75,7 @@ const TweetInput = () => {
                   setPublicTweet({ public: false, title: "People you follow" });
                   setPopOver(false);
                 }}
+                close={() => setPopOver(false)}
               />
             </div>
             <PrimaryButton disabled={text.length < 1} onClick={submitTweet}>

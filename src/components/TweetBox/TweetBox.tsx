@@ -7,9 +7,9 @@ import TweetBoxReactButton from "./TweetBoxReactButton";
 import { Prisma } from "@prisma/client";
 
 interface User {
+  id: string | null;
   name: string | null;
   image: string | null;
-  username: string | null;
 }
 
 interface Likes {
@@ -41,7 +41,7 @@ const TweetBox = ({
         createdAt={createdAt}
         name={user.name as string}
         image={user.image as string}
-        username={user.username ? user.username : ""}
+        id={user.id as string}
       />
       <p className="text-slate-700 mb-4">{text}</p>
       <TweetBoxReactButton

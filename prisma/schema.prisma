@@ -38,19 +38,21 @@ model Session {
 }
 
 model User {
-  id            String        @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?       @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
-  username      String?       @unique
-  accounts      Account[]
-  sessions      Session[]
-  tweets        Tweet[]
-  likes         LikeTweet[]
-  comments      Comment[]
-  likeComments  LikeComment[]
-  bookmarks     Bookmark[]
+  username      String?   @unique
+  description   String?
+
+  accounts     Account[]
+  sessions     Session[]
+  tweets       Tweet[]
+  likes        LikeTweet[]
+  comments     Comment[]
+  likeComments LikeComment[]
+  bookmarks    Bookmark[]
 
   followedBy Follows[] @relation("following")
   following  Follows[] @relation("follower")
@@ -107,7 +109,8 @@ model Comment {
 }
 
 model Bookmark {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
   user    User   @relation(fields: [userId], references: [id])
   userId  String
